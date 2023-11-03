@@ -8,6 +8,10 @@
 
 ![alt text](https://github.com/artmur1/12-05-hw/blob/main/12-05-zad1.png)
 
+SELECT SUM(data_length), SUM(index_length), (SUM(index_length)*100/SUM(data_length)) AS 'index_length in %'
+
+FROM INFORMATION_SCHEMA.TABLES;
+
 ### Задание 2
 
 Выполните explain analyze следующего запроса:
@@ -28,6 +32,22 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 ![alt text](https://github.com/artmur1/12-05-hw/blob/main/12-05-zad2-2.png)
 
 С помошью оператора LEFT JOIN удалось снизить стоимость запроса и время на выполнение.
+
+#### текст запроса
+
+select distinct concat(c.last_name, ' ', c.first_name), sum(p.amount) over (partition by c.customer_id, f.title)
+
+from rental r
+
+LEFT JOIN customer c ON c.customer_id  = r.customer_id  
+
+LEFT JOIN payment p ON p.rental_id  = r.rental_id 
+
+LEFT JOIN inventory i ON i.inventory_id = r.inventory_id 
+
+LEFT JOIN film f ON f.film_id = i.film_id 
+
+where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and r.customer_id = c.customer_id and i.inventory_id = r.inventory_id;
 
 ## Дополнительные задания (со звёздочкой*)
 Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале.
